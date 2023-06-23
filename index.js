@@ -1,33 +1,25 @@
 require('dotenv').config();
 const express = require('express');
 const { validateEnv } = require('./utils/validateEnv');
-const { PrismaClient } = require('@prisma/client');
 const { ApolloServer, gql } = require('apollo-server-express');
+const { connectDB } = require('./utils/db');
+const { seedMovies } = require('./utils/seed');
+const { typeDefs } = require('./schema/gql');
+const { resolvers } = require('./resolvers/movie');
 
 validateEnv()
-
-const prisma = new PrismaClient();
-
-const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-`;
-
-const resolvers = {
-    Query: {
-        hello: () => 'Hello world!',
-    },
-};
-
 
 async function bootstrap() {
     const server = new ApolloServer({ typeDefs, resolvers });
 
+    connectDB();
+
+    seedMovies();
+
     await server.start();
 
     const app = express();
-    app.get("/seed", (req, res)=> res.json({hello: true}))
+    app.get("/seed", (req, res) => res.json({ hello: true }))
 
     server.applyMiddleware({ app });
 
@@ -41,8 +33,6 @@ bootstrap()
     .catch((err) => {
         throw err;
     })
-    .finally(async () => {
-        await prisma.$disconnect();
-    });
+
 
 

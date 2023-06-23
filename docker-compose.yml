@@ -1,43 +1,21 @@
 version: "3.9"
 services:
-  postgres:
-    image: postgres:latest
-    container_name: postgres
-    hostname: postgres
+  db:
+    image: mongo
     ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      - 27017:27017
+    container_name: mongo-db2
     volumes:
-      - postgres-data:/var/lib/postgresql/data
-    restart: unless-stopped
+      - mongo-data:/data/db
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
-    depends_on:
-      - postgres
-    ports:
-      - "5556:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
-      PGADMIN_DEFAULT_PASSWORD: admin
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin
-    restart: unless-stopped
-
-  # prisma-postgres-api:
+  # node-mongo-api:
   #   stdin_open: true
   #   build:
   #     context: .
-  #     args:
-  #       COMMAND: ${COMMAND} 
   #     dockerfile: Dockerfile
-  #   container_name: prisma-postgres-api
+  #   container_name: node-mongo-api
   #   depends_on:
-  #     - postgres
+  #     - mongo
   #   volumes:
   #     - ./:/usr/app 
   #     - /usr/app/node_modules
@@ -46,5 +24,5 @@ services:
   #   restart: always
 
 volumes:
-  postgres-data:
-  pgadmin-data:
+  mongo-data:
+    driver: local
