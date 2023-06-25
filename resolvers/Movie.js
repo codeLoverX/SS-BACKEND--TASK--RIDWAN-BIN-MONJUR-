@@ -1,6 +1,6 @@
 const { Movie } = require("../models/Movie");
 
-resolvers = {
+movie = {
     Query: {
         getMoviesList: async (_parent, args) => {
             const movies = await Movie.find({})
@@ -39,5 +39,5 @@ resolvers = {
 
 
 module.exports = {
-    resolvers
+    movie
 }

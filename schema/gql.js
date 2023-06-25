@@ -1,9 +1,9 @@
 const { gql } = require('apollo-server-express');
 
-exports.typeDefs = gql `
+exports.typeDefs = gql`
 
 type Movie {
-    id: ID
+    _id: ID
     name: String
     type: String
     runtime: Int!
@@ -21,15 +21,44 @@ input AddMovieInput {
     runtime: Int
 }
 
-"""Add Movie input type."""
+"""Update Movie input type."""
 input UpdateMovieInput {
+    _id: ID!
+    name: String
+    type: String
+    runtime: Int
+}
+
+type User {
+    _id: ID!
+    name: String
+    email: String
+    role: String
+}
+
+type Token {
+  token: String
+}
+
+"""Add User input type."""
+input AddUserInput {
     name: String!
-    type: String!
-    runtime: Int!
+    email: String!
+    password: String!
+    confirmPassword: String!
+    role: String!
+}
+
+"""Login User input type."""
+input LoginUserInput {
+    email: String!
+    password: String!
 }
 
 type Mutation {
     updateMovie(patch: UpdateMovieInput): Movie
     addMovie(patch: AddMovieInput): Movie
     deleteMovie(id: ID): Boolean!
+    login(patch: LoginUserInput): Token!
+    register(patch: AddUserInput!): User!
 } `

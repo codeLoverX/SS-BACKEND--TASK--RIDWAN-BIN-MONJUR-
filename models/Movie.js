@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose')
+const { MovieGenreEnum } = require('../utils/enum')
 
 const MovieSchema = new Schema({
     name: {
@@ -7,6 +8,7 @@ const MovieSchema = new Schema({
     },
     type: {
         type: String,
+        enum: Object.values(MovieGenreEnum),
         required: true
     },
     runtime: {

@@ -5,5 +5,9 @@ module.exports = {
         COMEDY: "Comedy",
         ACTION: "Action",
         OTHER: "Other",
+    },
+    UserRoleEnum: {
+        NORMAL: "Normal",
+        ADMIN: "Admin"
     }
 }

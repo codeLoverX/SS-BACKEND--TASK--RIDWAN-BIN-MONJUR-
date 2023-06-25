@@ -1,5 +1,5 @@
 const { Movie } = require("../models/Movie");
-const { MovieGenreEnum } = require("../resolvers/enum");
+const { MovieGenreEnum } = require("../utils/enum");
 
 const moviesList = [
     new Movie({
