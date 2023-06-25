@@ -2,28 +2,63 @@ const { gql } = require('apollo-server-express');
 
 exports.typeDefs = gql`
 
-fragment HeroDetails on Character {
-    name
-    appearsIn
-  }
+interface MovieBasics {
+    _id: ID
+    name: String
+}
 
-type Movie {
+type Movie implements MovieBasics {
     _id: ID
     name: String
     type: String
     runtime: Int!
+    actors: [Actor]
+    director: Director
 }
 
-type Query {
-    getMoviesList: [Movie] 
-    getMovie(id: ID!): Movie
+type GuestUserMovie implements MovieBasics {
+    _id: ID
+    name: String
+}
+
+union MovieOutput = Movie | GuestUserMovie
+
+type Actor {
+    _id: ID
+    name: String
+}
+
+type Director {
+    _id: ID
+    name: String
 }
 
 """Add Movie input type."""
 input AddMovieInput {
+    name: String !
+    type: String !
+    runtime: Int !
+    year: Int !
+    actors: [AddActor] !
+    director: AddDirector !
+}
+
+input AddActor {
+    newActorDetails: AddNewActorDetails
+    existingActorId: ID
+}
+
+input AddDirector {
+    newDirectorDetails: AddNewDirectorDetails
+    existingDirectorId: ID
+}
+
+input AddNewActorDetails {
     name: String
-    type: String
-    runtime: Int
+}
+
+input AddNewDirectorDetails {
+    name: String
 }
 
 """Update Movie input type."""
@@ -60,10 +95,15 @@ input LoginUserInput {
     password: String!
 }
 
+type Query {
+    getMoviesList: [MovieOutput]
+    getMovie(_id: ID!): Movie
+}
+
 type Mutation {
     updateMovie(patch: UpdateMovieInput): Movie
     addMovie(patch: AddMovieInput): Movie
-    deleteMovie(id: ID): Boolean!
+    deleteMovie(_id: ID): Boolean!
     login(patch: LoginUserInput): Token!
     register(patch: AddUserInput!): User!
 } `

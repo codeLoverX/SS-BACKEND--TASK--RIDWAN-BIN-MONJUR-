@@ -1,13 +1,17 @@
 const { movie } = require("./Movie");
 const { user } = require("./User");
 
+const { Query: QueryMovie, Mutation: MutationMovie, ...restMovie } = movie;
+const { Query: QueryUser, Mutation: MutationUser, ...restUser } = user;
+console.log(restMovie)
 module.exports = {
     resolvers: {
+        ...restMovie,
         Query: {
-            ...movie.Query, ...user.Query
+            ...QueryMovie, ...QueryUser
         },
         Mutation: {
-            ...movie.Mutation, ...user.Mutation
+            ...MutationUser, ...MutationMovie
         }
     }
 }
