@@ -1,0 +1,14 @@
+mutation login ($patch: LoginUserInput) {
+    login (patch: $patch) {
+        token
+    }
+}
+
+TODO: MAKE A USER FIRST BY SIGN Up AND THENN USE THAT DATA
+
+{
+  "patch": {
+    "email": "mjrrdn@gmail.com",
+    "password": "123456"
+  }
+}

@@ -5,7 +5,7 @@ const { User } = require('../models/User');
 const user = {
     Query: {},
     Mutation: {
-        login: async (_parent, args) => {
+        login: async (_parent, args, context) => {
             try {
                 const select = "+password";
                 const { email, password } = args.patch;
@@ -22,7 +22,7 @@ const user = {
                     expiresIn: '1d'
                 });
                 console.log({ accessToken })
-
+                context.res.cookie('token', 'accessToken')
                 return {token: accessToken};
             }
             catch (error) {

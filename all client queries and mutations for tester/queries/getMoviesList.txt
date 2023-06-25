@@ -1,0 +1,27 @@
+query getMoviesList {
+    getMoviesList {
+        __typename
+        ... on Movie {
+            _id
+            name
+            type
+            runtime
+            actors {
+                _id
+                name
+            }
+            director {
+                _id
+                name
+            }
+        }
+        ... on GuestUserMovie {
+            _id
+            name
+        }
+    }
+}
+
+1. TODO: Get Authorization Token, e.g. below
+
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2NDk4OGZmMTkwMDFjMjgyMWZmMWRkOGEiLCJyb2xlIjoiTm9ybWFsIiwiaWF0IjoxNjg3NzE5OTU2LCJleHAiOjE2ODc4MDYzNTZ9.njYVrVV677LGfh8Iqt2a-ekmW7tmeW3bdit1-IbYgGU

@@ -1,0 +1,21 @@
+mutation register ($patch: AddUserInput!) {
+    register (patch: $patch) {
+        _id
+        name
+        email
+        role
+    }
+}
+
+TODO: MAKE A NORMAL USER AND AN ADMIN USER
+
+
+{
+  "patch": {
+    "name": "John",
+    "email": "mjrrdn@gmail.com",
+    "password": "123456",
+    "confirmPassword": "123456",
+    "role": "Normal"
+  }
+}

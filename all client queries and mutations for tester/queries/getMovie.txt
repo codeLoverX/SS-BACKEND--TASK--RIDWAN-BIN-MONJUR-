@@ -1,0 +1,22 @@
+query getMovie ($_id: ID!) {
+    getMovie (_id: $_id) {
+        _id
+        name
+        type
+        runtime
+        actors {
+            _id
+            name
+        }
+        director {
+            _id
+            name
+        }
+    }
+}
+
+1. TODO: Get ID from somewhere
+
+{
+  "_id": "6498b40e7449bf5cb3e61813"
+}

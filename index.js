@@ -9,6 +9,8 @@ const { resolvers } = require("./resolvers")
 const dotenv = require("dotenv");
 const path = require('path');
 const { getUser } = require("./utils/getUser")
+const cookies = require("cookie-parser");
+
 async function bootstrap() {
     validateEnv();
     const pathName = path.join(__dirname, "./.env")
@@ -30,6 +32,7 @@ async function bootstrap() {
     seedMovies();
     await server.start();
     const app = express();
+    app.use(cookies());
     server.applyMiddleware({ app });
     app.use((error, _, __, next) => { console.log({ error }); next(); })
     const port = process.env.PORT;

@@ -1,0 +1,10 @@
+mutation deleteMovie ($_id: ID) {
+    deleteMovie (_id: $_id)
+}
+
+TODO: Get id from database or getAll()
+
+Variable
+{
+  "_id": "6498af901683b9bbe101a3e0"
+}

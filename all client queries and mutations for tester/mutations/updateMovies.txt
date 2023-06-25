@@ -1,0 +1,62 @@
+mutation updateMovie ($patch: UpdateMovieInput) {
+    updateMovie (patch: $patch) {
+        _id
+        name
+        type
+        runtime
+        actors {
+            _id
+            name
+        }
+        director {
+            _id
+            name
+        }
+    }
+}
+
+1. TODO: Sign up, login as Admin, Get Authorization Token, e.g. below
+2. TODO: If you want to create new actor with Movie, pass
+    {
+      "newActorDetails": {
+        "name": "Ridwan"
+        }
+    },
+
+    Or, pass ID from the database to use existing actor.
+    Please get an actor from database as this one will not work
+
+    { "existingActorId": "649872528eddf2a8e6be5bc0" }
+
+3. TODO: If you want to create new director with Movie, pass
+    {
+      "newDirectorDetails": {
+        "name": "New Director"
+    }
+     Or, pass ID from the database to use existing director
+    Please get a director from database as this one will not work
+
+    { "existingDirectorId": "649872528eddf2a8e6be5bc0" }
+
+
+{
+  "patch": {
+    "_id": "6498b40e7449bf5cb3e61813",  // 
+    "name": "John",
+    "type": "",
+    "runtime": 0,
+    "actors": [
+    {
+      "newActorDetails": {
+        "name": "Ridwan"
+        }
+    },
+    { "existingActorId": "6498b40e7449bf5cb3e6180f" }
+    ],
+    "director": {
+      "newDirectorDetails": {
+        "name": "New Director"
+      }
+    }
+  }
+}
