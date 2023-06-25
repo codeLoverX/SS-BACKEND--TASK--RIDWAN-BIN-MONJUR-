@@ -39,102 +39,7 @@ movie = {
         }
     },
     Mutation: {
-        updateMovie: async (_parent, args) => {
-            let {
-                actors, director, ...rest
-            } = args.patch
-            // 
-            try {
-                const oldMovie = await Movie.findById(args._id);
-                if (typeof oldMovie === 'undefined' || oldMovie === null) {
-                    throw new UserInputError("Movie doesn't exist by id " + args._id)
-                }
-                if (typeof actors !== 'undefined' && actors !== null) {
-                    // The POST request array of actors must be added if they don't exists
-                    for (let currentActor of actors) {
-                        if (typeof currentActor.existingActorId === 'undefined' && currentActor.existingActorId === null) {
-                            currentActor = new Actor({ name: value.newActorDetails.name, movies: [oldMovie._id] });
-                            await currentActor.save();
-                        }
-                        else {
-                            if (!oldMovie.actors.includes(currentActor.existingActorId)) {
-                                currentActor = await Actor.findByIdAndUpdate(
-                                    new mongoose.mongo.ObjectId(currentActor.existingActorId),
-                                    {
-                                        $push: {
-                                            movies: args._id
-                                        }
-                                    },
-                                    { new: true }
-                                )
-                            }
-                        }
-                        currentActor = currentActor._id;
-                    }
-                    console.log({ actors })
-                    for (let currentOldActor of oldMovie.actors) {
-                        if (!oldMovie.actors.includes(currentOldActor.actors.map(value))) {
-                            currentActor = await Actor.findByIdAndUpdate(
-                                new mongoose.mongo.ObjectId(currentActor.existingActorId),
-                                {
-                                    $pullAll: {
-                                        movies: args._id
-                                    }
-                                },
-                                { new: true }
-                            )
-                        }
-                    }
 
-                    console.log({ actors })
-                }
-                if (typeof director !== 'undefined' && director !== null) {
-                    if (typeof director.existingDirectorId === 'undefined' && director.existingDirectorId === null) {
-                        director = new Director({ name: value.newDirectorDetails.name, movies: [oldMovie._id] });
-                        await director.save();
-                    }
-                    else {
-                        console.log({ old: typeof oldMovie.director, new: director.existingDirectorId })
-                        if (!oldMovie.director == director.existingDirectorId) {
-                            director = await Director.findByIdAndUpdate(
-                                director.existingDirectorId,
-                                {
-                                    $push: {
-                                        movies: args._id
-                                    }
-                                },
-                                { new: true }
-                            )
-                        }
-                    }
-                    director = director._id
-                    console.log({ old: typeof oldMovie.director, new: director.existingDirectorId })
-                    if (!oldMovie.director == director.existingDirectorId) {
-                        director = await Director.findByIdAndUpdate(
-                            new mongoose.mongo.ObjectId(oldMovie.director),
-                            {
-                                $pullAll: {
-                                    movies: args._id
-                                }
-                            },
-                            { new: true }
-                        )
-                    }
-                }
-                // oldMovie actors not present in the current POST request must be deleted
-                console.log({ director })
-                const movie = await Movie.findByIdAndUpdate(args._id,
-                    {
-                        ...rest,
-                        actors,
-                        director
-                    }, { new: true })
-                return movie;
-            }
-            catch (error) {
-                throw new Error(error);
-            }
-        },
         addMovie: async (_parent, args) => {
             let _actorsOutput = []
             let _directorOutput = {}
@@ -142,38 +47,46 @@ movie = {
             let {
                 actors, director, ...rest
             } = args.patch
+
+            // 1. if actor's id is given, check if it's a correct id and then just add the id.
+            // 2. if actor's new details are given and no id is given, 
+            //      then actor doesn't exist, use the details to create new actor and new actor's id
             actors = await Promise.all(actors.map(async (value) => {
                 let currentActor = null;
+                // CONDITION 2: Actor details given. Actor does't exist. .
                 if (typeof value.existingActorId === 'undefined' || value.existingActorId === null) {
-                    currentActor = new Actor({ name: value.newActorDetails.name, movies: [movie._id] });
+                    // Make a new actor and save it
+                    currentActor = new Actor({
+                        name: value.newActorDetails.name, movies: [] // movies: [movie._id] 
+                    });
+                    await currentActor.save();
                 }
+                // CONDITION 1: Actor id is given so maybe  actor exists. Let's check
                 else {
                     const id = new mongoose.mongo.ObjectId(value.existingActorId);
-                    currentActor = await Actor.findById(id);
-                    if (typeof currentActor === 'undefined' || currentActor === null) {
-                        throw new UserInputError("Actor doesn't exist by id " + value.existingActorId)
-                    }
-                    currentActor.movies.push(movie);
+                    // check if supplied actor id is correct
+                    currentActor = await Actor.findById(id).orFail();
+                    // currentActor.movies.push(movie);
                 }
-                await currentActor.save();
+                // await currentActor.save();
                 _actorsOutput.push(currentActor)
                 return currentActor._id
             }))
-
+            // 1. if director's id is given, check if it's a correct id and then just add the id.
+            // 2. if director's new details are given and no id is given, 
+            //      then director doesn't exist, use the details to create new director and add new actor's id
             if (typeof director.existingActorId === 'undefined' || director.existingActorId === null) {
+                // CONDITION 2: director details given. Actor does't exist. .
                 _directorOutput = new Director({ name: director.newDirectorDetails.name, movies: [movie._id] });
                 await _directorOutput.save();
             }
             else {
+                // CONDITION 1: Director id is given so maybe  director exists. Let's check
                 const id = new mongoose.mongo.ObjectId(director.existingDirectorId);
-                console.log({ id });
-                _directorOutput = await Director.findById(id);
-                if (typeof _directorOutput === 'undefined' || _directorOutput === null) {
-                    throw new UserInputError("Director doesn't exist by id " + director.existingDirectorId)
-                }
-                _directorOutput.movies.push(movie);
+                // check if supplied DIRECTOR id is correct
+                _directorOutput = await Director.findById(id).orFail();
+                // _directorOutput.movies.push(movie);
             }
-
             director = _directorOutput._id;
 
             movie = new Movie({
@@ -184,50 +97,73 @@ movie = {
             movie.director = _directorOutput;
             return movie;
         },
+        updateMovie: async (_parent, args) => {
+            let {
+                actors, director, ...rest
+            } = args.patch
+            let _actorsOutput = []
+            let _directorOutput = {}
+            try {
+                const id = new mongoose.mongo.ObjectId(args.patch._id);
+                await Movie.findById(id).orFail();
+                if (typeof actors !== 'undefined' && actors !== null) {
+                    let length = actors.length;
+                    let currentActor = {}
+                    // The POST request array of actors must be added if they don't exists
+                    for (let index= 0 ; index <length; index++) {
+                        currentActor = actors [index];
+                        if (typeof currentActor.existingActorId === 'undefined' || currentActor.existingActorId === null) {
+                            currentActor = new Actor({
+                                name: currentActor.newActorDetails.name, movies: [], // movies: [oldMovie._id] 
+                            });
+                            await currentActor.save();
+                        }
+                        else {
+                            const actorId = new mongoose.mongo.ObjectId(currentActor.existingActorId);
+                            currentActor = await Actor.findById(actorId).orFail();
+                        }
+                        actors[index] = currentActor._id;
+                        _actorsOutput.push(currentActor)
+                    }
+                }
+
+                if (typeof director !== 'undefined' && director !== null) {
+                    _directorOutput = { _id : director._id, name: director.name };
+                    if (typeof director.existingDirectorId === 'undefined' || director.existingDirectorId === null) {
+                        director = new Director({
+                            name: director.newDirectorDetails.name, movies: [] //  movies: [oldMovie._id]], 
+                        });
+                        await director.save();
+                    }
+                    else {
+                        const directorId = new mongoose.mongo.ObjectId(director.existingDirectorId);
+                        director = await Director.findById(directorId).orFail();
+                    }
+                    director = director._id;
+                } 
+
+                // console.log({rest, actors, director, _directorOutput})
+                const movie = await Movie.findByIdAndUpdate(id,
+                    {
+                        ...rest,
+                        actors,
+                        director
+                    }, { new: true }).orFail()
+                    
+                movie.actors = _actorsOutput;
+                movie.director = { id: _directorOutput._id, name: _directorOutput.name };
+                return movie;
+
+            }
+            catch (error) {
+                throw new Error(error);
+            }
+        },
         deleteMovie: async (_parent, args) => {
             try {
                 const id = new mongoose.mongo.ObjectId(args._id);
-                const movie = await Movie.findById(id);
-                console.log({movie: movie.director})
-                if (typeof movie !== 'undefined' && movie !== null) {
-                    let [actor, director] = await Promise.all([
-                        Actor.findOne(
-                            { _id: { $in: movie.actors } }),
-                        ,
-                        Director.findOne(
-                            { _id: movie.director }
-                        )
-                    ])
-                 
-                    console.log({ actor, director })
-                    actor.movies = actor.movies.filter((value) => {
-                        console.log({ type1: typeof value, type2: typeof movie._id })
-                        const isNotRemoved = value !== movie._id
-                        if (!isNotRemoved) {
-                            console.log({ value, id: movie._id })
-                        }
-                        return isNotRemoved
-                    })
-                    if (director?.movies == null){
-                        director.movies = []
-                    }
-                    director.movies = director.movies.filter((value) => {
-                        console.log({ type1: typeof value, type2: typeof movie._id })
-                        const isNotRemoved = value !== movie._id
-                        if (!isNotRemoved) {
-                            console.log({ value, id: movie._id })
-                        }
-                        return isNotRemoved
-                    })
-                    await Promise.all([
-                        async () => { await director.save(); },
-                        async () => { await user.save(); },
-                        async () => { await Movie.deleteOne({ _id: args._id }); }
-                    ])
-                }
-                else {
-                    throw new UserInputError("Movie doesn't exist by id" + args._id)
-                }
+                await Movie.findById(id).orFail();
+                await Movie.deleteOne({ _id: args._id });
                 return true;
             } catch (error) {
                 throw new Error(error);

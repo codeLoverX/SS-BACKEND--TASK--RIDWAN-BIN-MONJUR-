@@ -81,18 +81,6 @@ exports.seedMovies = async () => {
             value.director = directorsList[index]._id
         })
         await Movie.create(moviesList);
-        directorsList.forEach(async (value, index) => {
-            value.movies = [ moviesList[index]._id ]
-            await value.save();
-        })
-        actorsList.forEach(async (value, index) => {
-            value.movies = [ moviesList[lesserThanOne(index)]._id,  moviesList[index]._id ]
-            await value.save();
-        })
         console.info("Seeded (🌱) the data ")
     }
-}
-
-function lesserThanOne(number){
-    return number < 0 ? number+4 : number
 }

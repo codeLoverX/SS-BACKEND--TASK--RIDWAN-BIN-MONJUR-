@@ -69,6 +69,8 @@ input UpdateMovieInput {
     name: String
     type: String
     runtime: Int
+    actors: [AddActor] !
+    director: AddDirector !
 }
 
 type User {
