@@ -11,7 +11,7 @@ type Movie implements MovieBasics {
     _id: ID
     name: String
     type: String
-    runtime: Int!
+    runtime: Int
     actors: [Actor]
     director: Director
 }
@@ -26,11 +26,13 @@ union MovieOutput = Movie | GuestUserMovie
 type Actor {
     _id: ID
     name: String
+    movies: [Movie]
 }
 
 type Director {
     _id: ID
     name: String
+    movies: [Movie]
 }
 
 """Add Movie input type."""

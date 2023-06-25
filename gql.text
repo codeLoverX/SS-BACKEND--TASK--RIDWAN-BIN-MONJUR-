@@ -1,0 +1,21 @@
+{
+  "patch": {
+    "name": "John",
+    "type": "Action",
+    "runtime": 202,
+    "year": 2024,
+    "actors": [
+    {
+      "newActorDetails": {
+        "name": "Ridwan"
+        }
+    },
+    { "existingActorId": "649872528eddf2a8e6be5bc0" }
+    ],
+    "director": {
+      "newDirectorDetails": {
+        "name": "New Director"
+      }
+    }
+  }
+}

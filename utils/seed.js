@@ -85,7 +85,6 @@ exports.seedMovies = async () => {
             value.movies = [ moviesList[index]._id ]
             await value.save();
         })
-
         actorsList.forEach(async (value, index) => {
             value.movies = [ moviesList[lesserThanOne(index)]._id,  moviesList[index]._id ]
             await value.save();
