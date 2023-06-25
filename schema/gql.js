@@ -2,6 +2,11 @@ const { gql } = require('apollo-server-express');
 
 exports.typeDefs = gql`
 
+fragment HeroDetails on Character {
+    name
+    appearsIn
+  }
+
 type Movie {
     _id: ID
     name: String
@@ -10,7 +15,7 @@ type Movie {
 }
 
 type Query {
-    getMoviesList: [Movie]
+    getMoviesList: [Movie] 
     getMovie(id: ID!): Movie
 }
 
