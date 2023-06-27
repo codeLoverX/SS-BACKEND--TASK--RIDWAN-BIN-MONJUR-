@@ -1,0 +1,289 @@
+{
+	"info": {
+		"_postman_id": "445eba5b-f48b-4bd1-bbb9-32d15e3f253d",
+		"name": "zzzz",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12244203"
+	},
+	"item": [
+		{
+			"name": "mutations",
+			"item": [
+				{
+					"name": "updateMovie",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation updateMovie ($patch: UpdateMovieInput) {\n    updateMovie (patch: $patch) {\n        _id\n        name\n        type\n        runtime\n        actors {\n            _id\n            name\n        }\n        director {\n            _id\n            name\n        }\n    }\n}",
+								"variables": "{\n  \"patch\": {\n    \"_id\": \"6498b40e7449bf5cb3e61813\",\n    \"name\": \"John\",\n    \"type\": \"\",\n    \"runtime\": 0,\n    \"actors\": [\n    {\n      \"newActorDetails\": {\n        \"name\": \"Ridwan\"\n        }\n    },\n    { \"existingActorId\": \"6498b40e7449bf5cb3e6180f\" }\n    ],\n    \"director\": {\n      \"newDirectorDetails\": {\n        \"name\": \"New Director\"\n      }\n    }\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/graphql",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addMovie",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2NDk4OGZmMTkwMDFjMjgyMWZmMWRkOGEiLCJyb2xlIjoiTm9ybWFsIiwiaWF0IjoxNjg3ODI4MDE2LCJleHAiOjE2ODc5MTQ0MTZ9.lH_ThfG36J1r4Tu3GE4OsOIGKj7yTRbyiN9ZBeuZGK8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation addMovie ($patch: AddMovieInput) {\n    addMovie (patch: $patch) {\n        _id\n        name\n        type\n        runtime\n        actors {\n            _id\n            name\n        }\n        director {\n            _id\n            name\n        }\n    }\n}",
+								"variables": "{\n  \"patch\": {\n    \"name\": \"John\",\n    \"type\": \"Action\",\n    \"runtime\": 202,\n    \"year\": 2024,\n    \"actors\": [\n    {\n      \"newActorDetails\": {\n        \"name\": \"Ridwan\"\n        }\n    },\n    { \"existingActorId\": \"6498b40e7449bf5cb3e6180f\" }\n    ],\n    \"director\": {\n      \"newDirectorDetails\": {\n        \"name\": \"New Director\"\n      }\n    }\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/graphql",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteMovie",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation deleteMovie ($_id: ID) {\n    deleteMovie (_id: $_id)\n}",
+								"variables": "{\n  \"_id\": \"6498af901683b9bbe101a3e0\"\n}"
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/graphql",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login normal user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation login ($patch: LoginUserInput) {\n    login (patch: $patch) {\n        token\n    }\n}",
+								"variables": "{\n  \"patch\": {\n    \"email\": \"mjrrdn@gmail.com\",\n    \"password\": \"123456\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/graphql",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login admin user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation login ($patch: LoginUserInput) {\n    login (patch: $patch) {\n        token\n    }\n}",
+								"variables": "{\n  \"patch\": {\n    \"email\": \"mjrrdnasm@gmail.com\",\n    \"password\": \"123456\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/graphql",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register normal user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation register ($patch: AddUserInput!) {\n    register (patch: $patch) {\n        _id\n        name\n        email\n        role\n    }\n}",
+								"variables": "{\n  \"patch\": {\n    \"name\": \"John\",\n    \"email\": \"mjrrdn@gmail.com\",\n    \"password\": \"123456\",\n    \"confirmPassword\": \"123456\",\n    \"role\": \"Normal\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/graphql",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register admin user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation register ($patch: AddUserInput!) {\n    register (patch: $patch) {\n        _id\n        name\n        email\n        role\n    }\n}",
+								"variables": "{\n  \"patch\": {\n    \"name\": \"John\",\n    \"email\": \"mjrrdnasm@gmail.com\",\n    \"password\": \"123456\",\n    \"confirmPassword\": \"123456\",\n    \"role\": \"Admin\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/graphql",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "queries",
+			"item": [
+				{
+					"name": "getMoviesList",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query getMoviesList {\n    getMoviesList {\n        __typename\n        ... on Movie {\n            _id\n            name\n            type\n            runtime\n            actors {\n                _id\n                name\n            }\n            director {\n                _id\n                name\n            }\n        }\n        ... on GuestUserMovie {\n            _id\n            name\n        }\n    }\n}",
+								"variables": "{}"
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/graphql",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getMovie",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query getMovie ($_id: ID!) {\n    getMovie (_id: $_id) {\n        _id\n        name\n        type\n        runtime\n        actors {\n            _id\n            name\n        }\n        director {\n            _id\n            name\n        }\n    }\n}",
+								"variables": "{\n  \"_id\": \"6498b40e7449bf5cb3e61813\"\n}"
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/graphql",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getMoviesAuthList",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2NDk4OGZmMTkwMDFjMjgyMWZmMWRkOGEiLCJyb2xlIjoiTm9ybWFsIiwiaWF0IjoxNjg3NzE5OTU2LCJleHAiOjE2ODc4MDYzNTZ9.njYVrVV677LGfh8Iqt2a-ekmW7tmeW3bdit1-IbYgGU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query getMoviesList {\n    getMoviesList {\n        __typename\n        ... on Movie {\n            _id\n            name\n            type\n            runtime\n            actors {\n                _id\n                name\n            }\n            director {\n                _id\n                name\n            }\n        }\n        ... on GuestUserMovie {\n            _id\n            name\n        }\n    }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/graphql",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "",
+			"type": "any"
+		}
+	]
+}

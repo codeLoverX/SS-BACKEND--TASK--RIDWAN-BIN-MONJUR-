@@ -11,6 +11,12 @@ const path = require('path');
 const { getUser } = require("./utils/getUser")
 const cookies = require("cookie-parser");
 const cors = require("cors");
+const corsOptions = {
+    credentials: true,
+    origin: ['http://localhost:8000/graphql'],
+    methods: 'GET,HEAD,POST,OPTIONS',
+    preflightContinue: true,
+}
 async function bootstrap() {
     validateEnv();
     const pathName = path.join(__dirname, "./.env")
@@ -27,12 +33,6 @@ async function bootstrap() {
             };
         },
     });
-    const corsOptions = {
-        credentials: true,
-        origin: ['http://localhost:8000/graphql'],
-        methods: 'GET,HEAD,POST,OPTIONS',
-        preflightContinue: true,
-    }
     connectDB();
     seedMovies();
     await server.start();
