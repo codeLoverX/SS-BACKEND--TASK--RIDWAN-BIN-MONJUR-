@@ -22,7 +22,7 @@ const user = {
                     expiresIn: '1d'
                 });
                 console.log({ accessToken })
-                context.res.cookie('token', 'accessToken')
+                context.res.cookie('token', accessToken)
                 return {token: accessToken};
             }
             catch (error) {

@@ -41,7 +41,7 @@ movie = {
     },
     Mutation: {
 
-        addMovie: async (_parent, args) => {
+        addMovie: async (_parent, args, context) => {
             try {
                 const { user } = context;
                 if (user.role !== UserRoleEnum.ADMIN) {
@@ -107,7 +107,7 @@ movie = {
                 throw new Error(error);
             }
         },
-        updateMovie: async (_parent, args) => {
+        updateMovie: async (_parent, args, context) => {
             try {
 
                 const { user } = context;
@@ -174,7 +174,7 @@ movie = {
                 throw new Error(error);
             }
         },
-        deleteMovie: async (_parent, args) => {
+        deleteMovie: async (_parent, args, context) => {
             try {
                 const { user } = context;
                 if (user.role !== UserRoleEnum.ADMIN) {

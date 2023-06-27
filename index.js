@@ -10,7 +10,7 @@ const dotenv = require("dotenv");
 const path = require('path');
 const { getUser } = require("./utils/getUser")
 const cookies = require("cookie-parser");
-
+const cors = require("cors");
 async function bootstrap() {
     validateEnv();
     const pathName = path.join(__dirname, "./.env")
@@ -20,7 +20,6 @@ async function bootstrap() {
         resolvers,
         context: ({ req, res }) => {
             const user = getUser(req);
-            console.log('AUTHORIZE USER', user);
             return {
                 user,
                 req,
@@ -28,10 +27,17 @@ async function bootstrap() {
             };
         },
     });
+    const corsOptions = {
+        credentials: true,
+        origin: ['http://localhost:8000/graphql'],
+        methods: 'GET,HEAD,POST,OPTIONS',
+        preflightContinue: true,
+    }
     connectDB();
     seedMovies();
     await server.start();
     const app = express();
+    app.use(cors(corsOptions))
     app.use(cookies());
     server.applyMiddleware({ app });
     app.use((error, _, __, next) => { console.log({ error }); next(); })
